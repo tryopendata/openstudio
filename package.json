@@ -28,8 +28,8 @@
     "@playwright/test": "1.59.1",
     "@types/d3-dsv": "3.0.7",
     "@types/node": "24.19.2",
-    "@types/react": "19.2.14",
-    "@types/react-dom": "19.2.3",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
     "typescript": "7.0.2",
     "vite": "7.3.1",
     "vitest": "5.0.4"
