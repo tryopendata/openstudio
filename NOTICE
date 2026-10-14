@@ -1,0 +1,14 @@
+OpenStudio
+
+OpenStudio originates from the OpenChart Studio authoring application in
+https://github.com/tryopendata/openchart and uses the public OpenChart packages.
+Application source is distributed under the Apache License, Version 2.0.
+See LICENSE for the full license and copyright notice.
+
+Inter font
+Copyright (c) 2016 The Inter Project Authors (https://github.com/rsms/inter)
+The bundled src/assets/InterVariable.woff2 is distributed under the SIL Open
+Font License, Version 1.1. See public/Inter-LICENSE.txt. Vite copies that license
+to Inter-LICENSE.txt in the deployed static artifact.
+
+Other third-party package licenses remain with their respective packages.

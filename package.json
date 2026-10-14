@@ -1,0 +1,48 @@
+{
+  "name": "@opendata-ai/openstudio",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 6007 --strictPort",
+    "build": "vite build",
+    "preview": "vite preview --host 127.0.0.1 --port 6008 --strictPort",
+    "typecheck": "tsc --noEmit",
+    "lint": "biome check src",
+    "test": "vitest run",
+    "test:e2e": "playwright test"
+  },
+  "dependencies": {
+    "@opendata-ai/openchart-core": "8.9.0",
+    "@opendata-ai/openchart-engine": "8.9.0",
+    "@opendata-ai/openchart-vanilla": "8.9.0",
+    "d3-dsv": "3.0.1",
+    "motion": "14.1.0",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "world-atlas": "2.0.2",
+    "gifenc": "1.0.3"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.4.4",
+    "@playwright/test": "1.59.1",
+    "@types/d3-dsv": "3.0.7",
+    "@types/node": "24.19.2",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "typescript": "7.0.2",
+    "vite": "7.3.1",
+    "vitest": "5.0.4"
+  },
+  "description": "Browser-only visualization authoring powered by OpenChart",
+  "license": "Apache-2.0",
+  "engines": {
+    "node": "^22.12.0 || ^24.0.0 || >=26.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tryopendata/openstudio.git"
+  },
+  "homepage": "https://tryopendata.github.io/openstudio/",
+  "packageManager": "bun@1.4.2"
+}
