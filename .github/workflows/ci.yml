@@ -71,7 +71,8 @@ jobs:
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     needs: verify
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    # Allow the Pages action to finish its own 10-minute deployment timeout.
+    timeout-minutes: 15
     concurrency:
       group: pages
       cancel-in-progress: false
