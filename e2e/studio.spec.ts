@@ -13,6 +13,15 @@ async function closeSheet(page: Page) {
   if (await sheet.isVisible()) await sheet.getByRole('button', { name: /^Close / }).click();
 }
 
+async function downloadRecovery(page: Page) {
+  const download = page.waitForEvent('download');
+  await page.getByRole('button', { name: 'Download recovery draft', exact: true }).click();
+  const stream = await (await download).createReadStream();
+  const chunks = [];
+  for await (const chunk of stream!) chunks.push(chunk);
+  return Buffer.concat(chunks).toString();
+}
+
 async function choosePattern(page: Page, name: string) {
   const patterns = page.getByRole('button', { name: 'Patterns', exact: true });
   if (await patterns.isVisible()) await patterns.click();
@@ -298,6 +307,42 @@ test('malformed chrome imports and saved drafts are recoverable', async ({ page 
   await page.getByLabel('Or paste data').fill('name,value\nRecovered,1');
   await page.getByRole('button', { name: 'Preview your data' }).click();
   await expect(page.getByLabel('name, row 1', { exact: true })).toHaveValue('Recovered');
+  await expect(page.getByText('Saved in this browser', { exact: true })).toHaveCount(1);
+  expect(await downloadRecovery(page)).toBe(malformed);
+  await page.reload();
+  await page.getByRole('button', { name: 'Data', exact: true }).click();
+  await expect(page.getByLabel('name, row 1', { exact: true })).toHaveValue('Recovered');
+  expect(await downloadRecovery(page)).toBe(malformed);
+});
+
+test('failed recovery preservation keeps the original through edits and reloads', async ({ page }) => {
+  const raw = '  { unreadable original draft\n';
+  await page.evaluate((value) => localStorage.setItem('openchart.studio.draft.v1', value), raw);
+  await page.addInitScript(() => {
+    const setItem = Storage.prototype.setItem;
+    Storage.prototype.setItem = function (key, value) {
+      if (key.startsWith('openchart.studio.draft.v1.recovery.'))
+        throw new DOMException('Storage quota exceeded', 'QuotaExceededError');
+      return setItem.call(this, key, value);
+    };
+  });
+  await page.reload();
+  await expect(page.getByText('This browser could not preserve a recovery copy.', { exact: false })).toBeVisible();
+  await page.getByRole('button', { name: 'Reopen draft', exact: true }).click();
+  await expect(page.getByText('This browser could not preserve a recovery copy.', { exact: false })).toBeVisible();
+  await page.getByRole('button', { name: 'Import data' }).click();
+  await page.getByLabel('Or paste data').fill('name,value\nNew work,2');
+  await page.getByRole('button', { name: 'Preview your data' }).click();
+  await expect(page.getByLabel('name, row 1', { exact: true })).toHaveValue('New work');
+  // Page-hide flushes must use the same protection as the debounced autosave.
+  await page.evaluate(() => window.dispatchEvent(new Event('pagehide')));
+  await expect(page.getByText('Automatic saving is disabled to protect the original draft.', { exact: false })).toBeVisible();
+  expect(await page.evaluate(() => localStorage.getItem('openchart.studio.draft.v1'))).toBe(raw);
+  expect(await downloadRecovery(page)).toBe(raw);
+  await page.reload();
+  await expect(page.getByText('This browser could not preserve a recovery copy.', { exact: false })).toBeVisible();
+  expect(await page.evaluate(() => localStorage.getItem('openchart.studio.draft.v1'))).toBe(raw);
+  expect(await downloadRecovery(page)).toBe(raw);
 });
 
 test('map PNG exports preserve the authored background and meaningful country details', async ({

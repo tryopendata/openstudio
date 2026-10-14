@@ -1,4 +1,5 @@
 import { Component, type ReactNode } from 'react';
+import { DRAFT_KEY } from './drafts';
 
 /** Keep an unexpected rendering failure recoverable without erasing the local draft. */
 export class RecoveryBoundary extends Component<
@@ -12,8 +13,8 @@ export class RecoveryBoundary extends Component<
 
   private downloadDraft = () => {
     try {
-      const raw = localStorage.getItem('openchart.studio.draft.v1');
-      if (!raw) {
+      const raw = localStorage.getItem(DRAFT_KEY);
+      if (raw === null) {
         this.setState({ message: 'No saved draft is available in this browser.' });
         return;
       }
@@ -34,8 +35,9 @@ export class RecoveryBoundary extends Component<
       <main className="studio-recovery">
         <h1>The editor could not display this document</h1>
         <p>
-          Your saved draft has not been deleted. Download it for recovery, or restart the editor
-          with an example.
+          Download the saved draft for recovery, or restart with an example. Restarting preserves a
+          recovery copy before automatic saving resumes. If the browser cannot preserve it,
+          automatic saving stays disabled and you can download your new project.
         </p>
         <button type="button" onClick={this.downloadDraft}>
           Download saved draft

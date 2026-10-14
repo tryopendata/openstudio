@@ -344,8 +344,12 @@ export function ChartControls({
                 <input
                   type="color"
                   aria-label={`Color for ${name}`}
-                  value={colors.get(name)!}
-                  onChange={(e) => onChange(changeSeriesColor(chart, colors, name, e.target.value))}
+                  key={colors.get(name)}
+                  defaultValue={colors.get(name)!}
+                  onBlur={(e) => {
+                    if (e.target.value !== colors.get(name))
+                      onChange(changeSeriesColor(chart, colors, name, e.target.value));
+                  }}
                 />
               </label>
             ))}

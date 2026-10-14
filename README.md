@@ -17,9 +17,9 @@ See the [authoring guide](docs/authoring.md) for the supported controls and the 
 
 ## Your data
 
-Local CSV, TSV and JSON files are parsed in the browser. OpenStudio does not send imported datasets to a server. One draft is stored in browser local storage, scoped to the current browser profile and origin. Different paths on the same origin share that storage; private browsing, clearing site data or switching browsers/hosts can remove or separate drafts.
+Local CSV, TSV and JSON files are parsed in the browser. OpenStudio does not send imported datasets to a server. One working draft is stored in browser local storage, scoped to the current browser profile and origin. Different paths on the same origin share that storage; private browsing, clearing site data or switching browsers/hosts can remove or separate drafts.
 
-Use **Download Studio project** to keep the source data, preparation and visualization together. Plain JSON preserves the visualization document; CSV and image exports are not lossless project backups. Browser storage can be smaller than an accepted import, so a successful import does not guarantee the draft can be saved. The editor reports storage failures.
+Use **Download Studio project** to keep the source data, preparation and visualization together. Plain JSON preserves the visualization document; CSV and image exports are not lossless project backups. Browser storage can be smaller than an accepted import, so a successful import does not guarantee the draft can be saved. The editor reports storage failures. If a draft cannot be reopened, OpenStudio preserves its original text before saving new edits. Use **Download recovery draft** to keep that original. If it cannot be preserved, autosave stays disabled so the saved original is not overwritten; download your current Studio project as well.
 
 Plain CSV/TSV/JSON imports accept up to **5 MB and 20,000 rows**. Studio project backups accept **20 MB**. There are no cloud projects, accounts, collaborative sessions, public share links or publishing APIs. You can publish downloaded artifacts through your own tools.
 

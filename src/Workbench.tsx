@@ -13,7 +13,7 @@ import {
 } from '@opendata-ai/openchart-engine';
 import { exportCSV } from '@opendata-ai/openchart-vanilla';
 import { MotionConfig, motion, useReducedMotion } from 'motion/react';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AuthoringDrafts } from './AuthoringDrafts';
 import { DataEditor } from './DataEditor';
 import {
@@ -25,6 +25,7 @@ import {
   redoDocument,
   undoDocument,
 } from './document';
+import { createDraftSession, DRAFT_KEY, type RecoveryDraft } from './drafts';
 import { Inspector } from './Inspector';
 import { PatternThumbnail } from './PatternThumbnail';
 import { PreparationPanel } from './PreparationPanel';
@@ -44,21 +45,9 @@ import {
 import { ReaderPanel } from './ReaderPanel';
 import { Sheet } from './Sheet';
 
-const DRAFT_KEY = 'openchart.studio.draft.v1';
 const emptySelection: ReaderSelection = { preview: null, pinned: [], announcement: '' };
 type InspectorTab = 'design' | 'recommend' | 'review';
 
-function readDraft(): StudioProject | null {
-  const raw = localStorage.getItem(DRAFT_KEY);
-  if (!raw) return null;
-  try {
-    return parseProject(raw);
-  } catch {
-    throw new Error(
-      'The saved draft could not be opened. Its original data is still stored in this browser.',
-    );
-  }
-}
 function saveFile(contents: string, name: string, type = 'application/json') {
   const url = URL.createObjectURL(new Blob([contents], { type }));
   const link = document.createElement('a');
@@ -90,6 +79,21 @@ export function Workbench({ restoreDraft = true }: { restoreDraft?: boolean }) {
   const [selection, setSelection] = useState(emptySelection);
   const [notice, setNotice] = useState('');
   const [saved, setSaved] = useState(false);
+  const [draftSession] = useState(() => createDraftSession());
+  const [recoveries, setRecoveries] = useState<RecoveryDraft[]>([]);
+  const [recoveryKey, setRecoveryKey] = useState('');
+  const [autosaveBlocked, setAutosaveBlocked] = useState(false);
+  const readDraft = useCallback(
+    (restore = true) => {
+      const result = draftSession.open(restore);
+      setRecoveries(result.recoveries);
+      setRecoveryKey(result.recoveries.at(-1)?.key ?? '');
+      setAutosaveBlocked(result.autosaveBlocked);
+      setNotice(result.message);
+      return result;
+    },
+    [draftSession],
+  );
   const [importOpen, setImportOpen] = useState(false);
   const [jsonOpen, setJsonOpen] = useState(false);
   const [source, setSource] = useState('');
@@ -170,7 +174,7 @@ export function Workbench({ restoreDraft = true }: { restoreDraft?: boolean }) {
   };
   useEffect(() => {
     try {
-      const draft = restoreDraft ? readDraft() : null;
+      const { project: draft } = readDraft(restoreDraft);
       if (draft) {
         setHistory({ past: [], present: draft, future: [] });
         setSaved(true);
@@ -179,18 +183,16 @@ export function Workbench({ restoreDraft = true }: { restoreDraft?: boolean }) {
     } catch (error) {
       setNotice(error instanceof Error ? error.message : String(error));
     }
-  }, [restoreDraft]);
+  }, [restoreDraft, readDraft]);
   useEffect(() => {
     if (!changed.current) return;
     setSaved(false);
     const save = () => {
       try {
-        localStorage.setItem(DRAFT_KEY, serializeProject(project));
+        draftSession.save(project);
         setSaved(true);
-      } catch {
-        setNotice(
-          'This browser could not save the draft. Download the Studio project to keep your source data and preparation.',
-        );
+      } catch (error) {
+        setNotice(error instanceof Error ? error.message : String(error));
       }
     };
     const timer = setTimeout(save, 350);
@@ -204,7 +206,7 @@ export function Workbench({ restoreDraft = true }: { restoreDraft?: boolean }) {
       window.removeEventListener('pagehide', save);
       document.removeEventListener('visibilitychange', flush);
     };
-  }, [project]);
+  }, [project, draftSession]);
   useEffect(() => {
     const keydown = (event: KeyboardEvent) => {
       if ((event.target as HTMLElement).closest('input, textarea, select, [contenteditable=true]'))
@@ -374,7 +376,13 @@ export function Workbench({ restoreDraft = true }: { restoreDraft?: boolean }) {
             </a>
             <div className="studio-document">
               <span>{title}</span>
-              <small>{saved ? 'Saved in this browser' : 'Local draft'}</small>
+              <small>
+                {autosaveBlocked
+                  ? 'Automatic saving disabled'
+                  : saved
+                    ? 'Saved in this browser'
+                    : 'Local draft'}
+              </small>
             </div>
             <div className="studio-header-actions">
               <button
@@ -657,13 +665,42 @@ export function Workbench({ restoreDraft = true }: { restoreDraft?: boolean }) {
               <footer className="studio-footer">
                 <span>Local editing. Download a project to keep your work.</span>
                 <div>
+                  {recoveries.length > 1 && (
+                    <label>
+                      <span className="studio-sr-only">Recovery draft</span>
+                      <select
+                        value={recoveryKey}
+                        onChange={(event) => setRecoveryKey(event.target.value)}
+                      >
+                        {recoveries.map((draft, index) => (
+                          <option key={draft.key} value={draft.key}>
+                            {draft.key === DRAFT_KEY
+                              ? 'Original draft (unsaved recovery)'
+                              : `Recovered draft ${index + 1}`}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                  )}
+                  {recoveries.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const draft = recoveries.find((item) => item.key === recoveryKey);
+                        if (draft) saveFile(draft.raw, 'openchart-recovery.json');
+                      }}
+                    >
+                      Download recovery draft
+                    </button>
+                  )}
                   <button
                     type="button"
                     onClick={() => {
                       try {
-                        const draft = readDraft();
-                        if (draft) commitProject(draft);
-                        else setNotice('No saved draft yet. Your first edit creates one.');
+                        const result = readDraft();
+                        if (result.project) commitProject(result.project);
+                        else if (!result.message)
+                          setNotice('No saved draft yet. Your first edit creates one.');
                       } catch (error) {
                         setNotice(String(error));
                       }
