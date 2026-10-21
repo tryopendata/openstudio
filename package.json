@@ -13,9 +13,9 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
-    "@opendata-ai/openchart-core": "8.9.0",
-    "@opendata-ai/openchart-engine": "8.9.0",
-    "@opendata-ai/openchart-vanilla": "8.9.0",
+    "@opendata-ai/openchart-core": "8.9.1",
+    "@opendata-ai/openchart-engine": "8.9.1",
+    "@opendata-ai/openchart-vanilla": "8.9.1",
     "d3-dsv": "3.0.1",
     "motion": "14.1.0",
     "react": "19.3.0",
