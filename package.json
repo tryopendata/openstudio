@@ -17,7 +17,7 @@
     "@opendata-ai/openchart-engine": "8.9.0",
     "@opendata-ai/openchart-vanilla": "8.9.0",
     "d3-dsv": "3.0.1",
-    "motion": "14.1.0",
+    "motion": "14.3.0",
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "world-atlas": "2.0.2",
