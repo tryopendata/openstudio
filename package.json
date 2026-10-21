@@ -32,7 +32,7 @@
     "@types/react-dom": "19.2.3",
     "typescript": "7.0.2",
     "vite": "7.3.1",
-    "vitest": "5.0.4"
+    "vitest": "5.0.5"
   },
   "description": "Browser-only visualization authoring powered by OpenChart",
   "license": "Apache-2.0",
