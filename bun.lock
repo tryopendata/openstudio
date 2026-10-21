@@ -5,9 +5,9 @@
     "": {
       "name": "@opendata-ai/studio",
       "dependencies": {
-        "@opendata-ai/openchart-core": "8.9.0",
-        "@opendata-ai/openchart-engine": "8.9.0",
-        "@opendata-ai/openchart-vanilla": "8.9.0",
+        "@opendata-ai/openchart-core": "8.9.1",
+        "@opendata-ai/openchart-engine": "8.9.1",
+        "@opendata-ai/openchart-vanilla": "8.9.1",
         "d3-dsv": "3.0.1",
         "gifenc": "1.0.3",
         "motion": "14.1.0",
@@ -113,11 +113,11 @@
 
     "@napi-rs/lzma-linux-x64-gnu": ["@napi-rs/lzma-linux-x64-gnu@1.5.1", "", { "os": "linux", "cpu": "x64" }, "sha512-oTXEIha4SsuXdTA4Iyskj0kpdx2yVXdhd75c2v3xGrHFfVMsbhTPZU/nMPL4sWKo4pBHm3aucLaqGlF696dTyQ=="],
 
-    "@opendata-ai/openchart-core": ["@opendata-ai/openchart-core@8.9.0", "", { "dependencies": { "d3-color": "^3.1.0", "d3-format": "^3.1.0", "d3-time-format": "^4.1.0" } }, "sha512-o6JXInZdq5++JF834ZqB1Bo/Y8uRc8EzOVP58mPvoKQSOEml69vmew0Cwumw163qeD3PTY84sSnQRVeWQD9DJA=="],
+    "@opendata-ai/openchart-core": ["@opendata-ai/openchart-core@8.9.1", "", { "dependencies": { "d3-color": "^3.1.0", "d3-format": "^3.1.0", "d3-time-format": "^4.1.0" } }, "sha512-1R4DeITJ0azzEVuvO08bEGjB4NW8ZbHkQhsJIIo/1Ivvdkj5e5iIf7EwdLMvbB+VD+Y0CjWLC+9/hw74e63oXA=="],
 
-    "@opendata-ai/openchart-engine": ["@opendata-ai/openchart-engine@8.9.0", "", { "dependencies": { "@opendata-ai/openchart-core": "8.9.0", "d3-array": "^3.2.0", "d3-format": "^3.1.2", "d3-geo": "^3.1.0", "d3-interpolate": "^3.0.0", "d3-sankey": "^0.12.3", "d3-scale": "^4.0.0", "d3-shape": "^3.2.0", "d3-time": "^3.1.0", "topojson-client": "^3.1.0" } }, "sha512-5IIpd2pA6NSWLdIIISM4yDx5uKvhhL/X2NDCebTPy3jNpMDHpvvUr0g5KltwCJHX1mUZdI/CdoKo9NJ8lghOKg=="],
+    "@opendata-ai/openchart-engine": ["@opendata-ai/openchart-engine@8.9.1", "", { "dependencies": { "@opendata-ai/openchart-core": "8.9.1", "d3-array": "^3.2.0", "d3-format": "^3.1.2", "d3-geo": "^3.1.0", "d3-interpolate": "^3.0.0", "d3-sankey": "^0.12.3", "d3-scale": "^4.0.0", "d3-shape": "^3.2.0", "d3-time": "^3.1.0", "topojson-client": "^3.1.0" } }, "sha512-CWUI4HwsfRdq/dwkbChQp2bjCRk7vTUSLXXqnKigr4mGZfdZhVz1vVMMOTBALpDe89jZBjbcwguswBBqWzVlcg=="],
 
-    "@opendata-ai/openchart-vanilla": ["@opendata-ai/openchart-vanilla@8.9.0", "", { "dependencies": { "@floating-ui/dom": "^1.7.6", "@opendata-ai/openchart-core": "8.9.0", "@opendata-ai/openchart-engine": "8.9.0", "d3-force": "^3.0.0", "d3-force-3d": "^3.0.6", "d3-interpolate": "^3.0.0", "d3-quadtree": "^3.0.1" }, "peerDependencies": { "3d-force-graph": ">=1.80.0", "gifenc": ">=1.0.0", "happy-dom": ">=14.0.0", "three": ">=0.179 <1", "three-spritetext": ">=1.9.0" }, "optionalPeers": ["3d-force-graph", "gifenc", "happy-dom", "three", "three-spritetext"] }, "sha512-smLFSlaSxBUe0Jnhc4PELZNEXQptKHDKeLEeaZUpcQdUhUjLIDj6YOk7N2SoCQOtg+Cko8IE4PEUWPIcX7Icmg=="],
+    "@opendata-ai/openchart-vanilla": ["@opendata-ai/openchart-vanilla@8.9.1", "", { "dependencies": { "@floating-ui/dom": "^1.7.6", "@opendata-ai/openchart-core": "8.9.1", "@opendata-ai/openchart-engine": "8.9.1", "d3-force": "^3.0.0", "d3-force-3d": "^3.0.6", "d3-interpolate": "^3.0.0", "d3-quadtree": "^3.0.1" }, "peerDependencies": { "3d-force-graph": ">=1.80.0", "gifenc": ">=1.0.0", "happy-dom": ">=14.0.0", "three": ">=0.179 <1", "three-spritetext": ">=1.9.0" }, "optionalPeers": ["3d-force-graph", "gifenc", "happy-dom", "three", "three-spritetext"] }, "sha512-dzcXhNN8pA2E3YkQhP4+Ggvsv/iLJvBNKHx34wB6Zm+PmDa3l1fHQoGF/LrwuNQafoDmB7k2ZzIFGy3EGnmcxg=="],
 
     "@playwright/test": ["@playwright/test@1.59.1", "", { "dependencies": { "playwright": "1.59.1" }, "bin": { "playwright": "cli.js" } }, "sha512-PG6q63nQg5c9rIi4/Z5lR5IVF7yU5MqmKaPOe0HSc0O2cX1fPi96sUQu5j7eo4gKCkB2AnNGoWt7y4/Xx3Kcqg=="],
 
